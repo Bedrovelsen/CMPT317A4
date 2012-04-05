@@ -13,6 +13,11 @@ import java.util.regex.Pattern;
  */
 public class QuestionBot {
 
+	private static final int WHO = 1;
+	private static final int WHAT = 2;
+	private static final int WHERE = 3;
+	private static final int WHEN = 4;
+	
 	//Default filename for the corpus
 	private static final String CORPUS = "corpus.txt"; 
 	
@@ -30,7 +35,12 @@ public class QuestionBot {
 	
 	//Pattern object for use in matching regex
 	private Pattern qRegex = Pattern.compile(regPattern);
+	private Matcher regMatcher;
 	 
+	private int questionType;
+	
+	private String qAnswer = "";
+	
 	/**
 	 * Default constructor used when no file specified
 	 * @throws IOException 
@@ -109,24 +119,60 @@ public class QuestionBot {
 	 */
 	public String getQuestionAnswer(String question)
 	{
-		String answer = "";
+		int i = 0;
 		
-		//Matcher object for use in looping over found matches
-		Matcher mt = qRegex.matcher(question.toLowerCase());
-		
-		//Add the matches to the qParts variable which stores important info from question
-		while(mt.find())
+		if(question.toLowerCase().startsWith("who"))
 		{
-			System.out.println(mt.group());
-			qParts[mt.groupCount()] = mt.group();
+			this.questionType = WHO;
+		}
+		else if(question.toLowerCase().startsWith("what"))
+		{
+			this.questionType = WHAT;
+		}
+		else if(question.toLowerCase().startsWith("where"))
+		{
+			this.questionType = WHERE;
+		}
+		else if(question.toLowerCase().startsWith("when"))
+		{
+			this.questionType = WHEN;
+		}
+		else
+		{
+			System.out.println("ERROR:Improper question format");
+			return this.qAnswer;
 		}
 		
-		return answer;
+		//Matcher object for use in looping over found matches
+		this.regMatcher = this.qRegex.matcher(question.toLowerCase());
+		
+		//Add the matches to the qParts variable which stores important info from question
+		while(regMatcher.find())
+		{
+			this.qParts[i] = regMatcher.group();
+			++i;
+		}
+		
+		locateAnswer();
+		
+		return this.qAnswer.toString();
 
 	}
 	
-
-
+	
+	/**
+	 * 
+	 */
+	public void locateAnswer()
+	{
+		//getRelevantParagraphs creates an array of strings of paragraphs in the corpus with
+		//matching text from the first active question portion
+		//solveQuestion takes in the paragraphs with matching text and finds an answer to the question
+		//based on the other active sections of the question
+		
+		//this.qAnswer = solveQuestion(getReleventParagraphs());
+	}
+	
 	/*Getters*/
 	
 	public String getCorpus()

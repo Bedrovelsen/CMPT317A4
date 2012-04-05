@@ -11,7 +11,7 @@ public class A4Main {
 	 */
 	public static void main(String[] args) {
 		
-		QuestionBot bot = new QuestionBot("test.txt");
+		QuestionBot bot = new QuestionBot();
 		System.out.println(bot.getQuestionAnswer("Where is it that [the government junta yesterday approved a draft bill] on [5 Jan 90]?"));
 		
 		
