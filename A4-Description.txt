@@ -1,0 +1,123 @@
+Department of Computer Science
+
+University of Saskatchewan
+
+Cmpt 317-02
+
+Assignment 4
+
+Question Answering from Texts
+
+Due: April 7, 2012 (just before midnight)
+
+This assignment is loosely modelled on the various message understanding and text extraction contests held over the past couple of decades, created to challenge natural language understanding researchers to come up with new techniques to deal with text.  A dash of IBM’s Watson is also thrown in.
+
+Here is the task.  Write a system to provide answers to questions posed in natural language.  The answers will be extractable from a corpus of natural language news articles, whose topic is the general domain of Latin American politics in the early 90’s (in fact, the corpus was used in one of the early message understanding contests).  Here is one news article, taken from this corpus:
+
+SANTIAGO, 5 JAN 90 -- [EXCERPTS] THE GOVERNMENT JUNTA YESTERDAY APPROVED A DRAFT BILL TO "MODIFY LAW 18314, WHICH DEFINES TERRORIST ACTIVITIES AND ESTABLISHES PENALTIES."  THE BILL WILL RESTRICT THE APPLICATION OF THE LAW TO THE MOST SERIOUS CASES AND WILL LEAVE OTHER CRIMES, THAT WERE FORMERLY CONSIDERED TERRORIST ACTIVITY, FOR TRIAL UNDER COMMON LAW.
+
+THE NEW BILL ACCEPTS THE POSSIBILITY IN SOME CASES OF A PRISONER BEING RELEASED ON BAIL OR RECEIVING A PARDON OR AMNESTY.  THE BILL ALSO ESTABLISHES OTHER BENEFITS NOT CONTEMPLATED BY LAW 18314, INCLUDING A NEW PROCEEDINGS FOR SPEEDIER TRIALS. [PASSAGE OMITTED]
+
+ACCORDING TO RETIRED GENERAL FERNANDO TORRES SILVA, WHO IS THE ARMY JUDGE ADVOCATE GENERAL, THE MODIFICATIONS ESTABLISH LIGHTER SENTENCES, FREEDOM ON BAIL, AND POSSIBLE PARDONS OR AMNESTIES.  THESE BENEFITS WERE NOT CONTEMPLATED UNDER THE FORMER ANTITERRORIST LAW.
+
+AS AN EXAMPLE TORRES CITED THAT "SENTENCES OF INDIVIDUALS TRIED AS ACCOMPLICES WILL BE LOWER.  THEY WILL RECEIVE LOWER SENTENCES THAN THAT PREVIOUSLY CONTEMPLATED."
+
+THE NEW BILL WILL ALSO ALLOW A GREAT NUMBER OF PEOPLE WHO ARE BEING TRIED BY THE INTERIOR MINISTRY TO GO OUT ON BAIL.
+
+ACCORDING THE GENERAL ATTORNEY'S OFFICE, MORE THAN 1,000 PRISONERS MIGHT BENEFIT FROM THE MODIFICATIONS.
+
+The corpus contains many other such articles, of the same flavour.  From this article, humans could answer questions such as “Who is Chile’s Army Judge Advocate General?” , “What does Chilean Law 18314 apply to?” , “How many prisoners might benefit from the proposed revisions to Law 18314?” , “Is the Chilean government reducing penalties for terrorism?”, and so on.  Some of these questions would be very difficult for an automated system to answer, however, since they would require sophisticated linguistic processing and/or deep knowledge of the world.  So, in this assignment the task will be much simpler.  Questions will be posed that are in a specific form, and the answers can be found somewhere in the corpus largely through matching surface forms, rather than through deep inference.
+
+The questions will be posed in one of the following templates, roughly corresponding to the classic “who”, “what”, “where”, and “when” categories so beloved of journalists:
+
+Who template:
+
+Who x [string taken exactly from the text] x [place] x [time]?
+
+            must return a person
+
+eg. Who was [the army judge advocate general] of [Chile] in[1990]?
+
+eg. Who [approved a draft bill to “modify law 18313] in [Chile] in [1990]?
+
+eg. Who was a [retired general] in [Chile] in [1990]?
+
+What template:
+
+What x [string taken exactly from the text] x [place] x [time]?
+
+            must return the remainder of the sentence after the string
+
+eg. What is [an example Torres cited] in [Chile] in [1990]?
+
+eg. What is it that [the new bill will also allow] in [Chile] in [1990]?
+
+eg. What is it that [the new bill will also allow] in [Chile] in [1990]?
+
+Where template:
+
+Where x [string taken exactly from the text] x [time]?
+
+            must return a place
+
+eg. Where is it that [the government junta yesterday approved a draft bill] on [5 Jan 90]?
+
+When template:
+
+When x [string taken exactly from the text] x [place]?
+
+            must return a time
+
+eg. When did a Chilean spokesman say that [more than 1,000 prisoners might benefit from the modifications] to the bill approved in [Chile]?
+
+In these templates, an x represents an arbitrary set of English words that should be ignored by your question answering system – they are there simply to make the question read better.  The parts of the templates in square brackets [  ] are the “active” parts of the question that your question answering system will need to process.  The first active part is a string of words that appears exactly in the article (ignoring capitalization).  The other active parts refer to places and times and come in a variety of forms.  A place will be a town, city, or country in Latin America.  A time will be a day, month, or year (or a combination of these).  Your system will have to be able to recognize these various forms, which will be delineated with the brackets and will come in the exact order shown in the 4 templates.
+
+Your system should answer a question by searching through the corpus for parts of the text that match the first string in the question and also fit the question’s place and/or time constraints (this might require some reasoning).  If there is more than one match, then a “best” one should be selected (using some heuristics that seem reasonable).  If there are no matches, then some of the constraints should be relaxed.  If there is still no match, then the system should report failure.  However, assuming there is a best match, then an answer must be found from the text (again, this might require some reasoning).  The answer should then be output in some reasonable form for the user to see.  The reasoning carried out by your system is to be determined by you, and may be at any of the lexical, syntactic, semantic, or pragmatic levels.  It may take into account the specific type of template (who, what, where, when) of the question, if you like.  Your system may also need to make use of additional knowledge structures that you have created.
+
+This is a very open ended assignment.  We will provide (on the course Moodle site) the corpus that you should use, and you should familiarize yourself with it to see the kinds of news articles that appear and to see the kinds of language and content used.  You should then design a set of example questions that you will set as typical challenge questions for your question answering system.  Playing with these for a while should inform your knowledge structures and your system design.  You should then build your system (using the programming language of your choice) so it works on your challenge questions, and then see if you can show the system works for a wider set of questions beyond the challenge questions.  Further iterations of system design to make it more sophisticated can then be carried out if you have time.
+
+You should hand in files containing your complete system code (commented, of course), any knowledge structures that your system uses, and your challenge questions.  As well, you should provide external documentation clearly indicating your name and NSID (and your partner’s name and NSID if you are working in a team), as well as detailed instructions about how to run your system.  The documentation should also describe your methodologies and knowledge structures (essentially your design); how this design is at least somewhat general in that it might allow a wide variety of questions and answers to be found; how the design relates to your implementation (i.e. what modules implement what parts of your design); the strengths and limitations of your approach; the challenge questions (again) and the answers your system should give for each challenge question and why these questions have been chosen as representative.
+
+You may work in teams of 2 for this assignment should you wish.  Please let Craig know that you are doing so.  If you do work as a team, have only one member of the team hand in your project, but have the other member hand in a readme.txt file indicating who he or she is working with so we have a cross reference from either partner to the other.  We will try to run your system on your own examples (hence the importance of providing them to us, along with the answers to be expected), but we will also try to run it on a set of questions that we will devise with which to test every system.  Your final mark on this assignment will be based on the quality of your documentation, the creativity and elegance of your system design, the functionality and robustness of your methodologies, the number and types of questions your system can handle, the accuracy of the answers it gives, and the generality of your approach if applied to other corpora.
+
+More about message understanding and text understanding contests can be found below, if you become intrigued.  Many of these contests are/were sponsored by DARPA (Defense Advanced Research Projects Agency) and/or NIST (National Institute of Standards), major U.S. institutions.  There is obvious usefulness to the military and to government in being able to automatically extract information from text, explaining DARPA and NIST involvement.
+
+Contests and conferences
+
+MUC (Message Understanding Contest): 1987-1997
+
+- http://www.itl.nist.gov/iaui/894.02/related_projects/muc/
+
+ACE (Automatic Content Extraction): 1999-2008
+
+- http://www.itl.nist.gov/iad/894.01/tests/ace/
+
+TAC (Text Analysis Conference)
+
+            - http://www.nist.gov/tac/tracks/index.html
+
+TREC (Text Retrieval Conference)
+
+            - http://en.wikipedia.org/wiki/Text_Retrieval_Conference
+
+Loebner Prize
+
+- http://www.loebner.net/Prizef/loebner-prize.html
+
+Resources supporting various contests
+
+- http://www.cs.technion.ac.il/~gabr/resources/data/ne_datasets.html
+
+IBM’s Watson
+
+- http://www-03.ibm.com/innovation/us/watson/index.html
+
+Some papers on early MUCs
+
+Ralph Grishman, Beth Sundheim, “Message Understanding Conference - 6: A Brief History”. In: Proceedings of the 16th International Conference on Computational Linguistics (COLING), Copenhagen, 1996, 466–471. http://acl.ldc.upenn.edu/C/C96/C96-1079.pdf
+
+Nancy Chinchor, David D. Lewis, Lynette Hirschman, “Evaluating Message Understanding Systems: An Analysis of the Third Message Understanding Conference (MUC-3)”, Computational Linguistics Journal, 1993, pp. 409-449
+
+Great textbook for natural language
+
+Daniel Jurafsky and James H. Martin, Speech and Language Processing: An Introduction to Natural Language Processing, Computational Linguistics, and Speech Recognition, Second Edition, Prentice Hall, 2008, 1024 pages
