@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 
@@ -12,7 +14,7 @@ import java.io.IOException;
 public class QuestionBot {
 
 	//Default filename for the corpus
-	private static final String CORPUS = "corpus.txt";
+	private static final String CORPUS = "corpus.txt"; 
 	
 	//Stores the corpus text
 	private String corpus;
@@ -20,7 +22,15 @@ public class QuestionBot {
 	//Stores each article in the corpus
 	private String[] articles;
 	
+	//Stores the needed sections of the question
+	private String[] qParts = new String[4];
 	
+	//Regex Pattern to get useful info from question
+	private String regPattern = "([\\[]{1})([A-Za-z0-9 ]+)([\\]]{1})";
+	
+	//Pattern object for use in matching regex
+	private Pattern qRegex = Pattern.compile(regPattern);
+	 
 	/**
 	 * Default constructor used when no file specified
 	 * @throws IOException 
@@ -86,7 +96,7 @@ public class QuestionBot {
 		}
 		
 		//Store entire corpus in string
-		this.corpus = sb.toString();
+		this.corpus = sb.toString().toLowerCase();
 		
 		//Store each article individually
 		this.articles = this.corpus.split("\\DEV-MUC3");
@@ -100,9 +110,22 @@ public class QuestionBot {
 	public String getQuestionAnswer(String question)
 	{
 		String answer = "";
+		
+		//Matcher object for use in looping over found matches
+		Matcher mt = qRegex.matcher(question.toLowerCase());
+		
+		//Add the matches to the qParts variable which stores important info from question
+		while(mt.find())
+		{
+			System.out.println(mt.group());
+			qParts[mt.groupCount()] = mt.group();
+		}
+		
 		return answer;
+
 	}
 	
+
 
 	/*Getters*/
 	
